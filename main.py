@@ -1,3 +1,4 @@
+import sys
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from player import Player
@@ -25,12 +26,13 @@ def main():
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
     # Asteroids
-    asteroids = AsteroidField()
+    asteroidfield = AsteroidField()
 
     # Add to groups
     drawable.add(player)
     updatable.add(player)
-    updatable.add(asteroids)
+    updatable.add(asteroidfield)
+    asteroids.add(asteroidfield)
 
     redraw = True
     while redraw:
@@ -41,6 +43,10 @@ def main():
         updatable.update(dt)
         for item in drawable:
             item.draw(screen)
+        for asteroid in asteroidfield.spawnedList:
+            if player.collission(asteroid):
+                print("Game Over!")
+                sys.exit()
         pygame.display.flip()
         deltaTime = clock.tick(60)  # Pass for 1/60th of a second
         dt = deltaTime / 1000
